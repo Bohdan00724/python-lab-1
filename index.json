@@ -1,0 +1,686 @@
+{
+  "doc_meta": {
+    "0": {
+      "length": 81
+    },
+    "1": {
+      "length": 64
+    }
+  },
+  "postings": {
+    "the": [
+      {
+        "doc_id": 0,
+        "frequency": 6
+      },
+      {
+        "doc_id": 1,
+        "frequency": 3
+      }
+    ],
+    "james": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "webb": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "space": [
+      {
+        "doc_id": 0,
+        "frequency": 4
+      }
+    ],
+    "telescope": [
+      {
+        "doc_id": 0,
+        "frequency": 4
+      }
+    ],
+    "is": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      },
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "a": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      },
+      {
+        "doc_id": 1,
+        "frequency": 2
+      }
+    ],
+    "designed": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "primarily": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "to": [
+      {
+        "doc_id": 0,
+        "frequency": 2
+      },
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "conduct": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "infrared": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "astronomy": [
+      {
+        "doc_id": 0,
+        "frequency": 2
+      }
+    ],
+    "as": [
+      {
+        "doc_id": 0,
+        "frequency": 2
+      }
+    ],
+    "largest": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      },
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "optical": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "in": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "its": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "high": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "resolution": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "and": [
+      {
+        "doc_id": 0,
+        "frequency": 3
+      },
+      {
+        "doc_id": 1,
+        "frequency": 3
+      }
+    ],
+    "sensitivity": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "allow": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "it": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "view": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "objects": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "too": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "old": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "distant": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "or": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "faint": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "for": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      },
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "hubble": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "this": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "will": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "enable": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "investigations": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "across": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "many": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "fields": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "of": [
+      {
+        "doc_id": 0,
+        "frequency": 4
+      },
+      {
+        "doc_id": 1,
+        "frequency": 3
+      }
+    ],
+    "cosmology": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "such": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "observation": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "first": [
+      {
+        "doc_id": 0,
+        "frequency": 2
+      }
+    ],
+    "stars": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "formation": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "galaxies": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "detailed": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "atmospheric": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "characterization": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "potentially": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "habitable": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "exoplanets": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "це": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "просто": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "тестовий": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "текст": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "для": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "перевірки": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "пошуку": [
+      {
+        "doc_id": 0,
+        "frequency": 1
+      }
+    ],
+    "ocean": [
+      {
+        "doc_id": 1,
+        "frequency": 2
+      }
+    ],
+    "continuous": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "body": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "salt": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "water": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "that": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "covers": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "more": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "than": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "70": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "percent": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "earth's": [
+      {
+        "doc_id": 1,
+        "frequency": 2
+      }
+    ],
+    "surface": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "currents": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "govern": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "world's": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "weather": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "churn": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "kaleidoscope": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "life": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "humans": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "depend": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "on": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "these": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "teeming": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "waters": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "comfort": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "survival": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "but": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "global": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "warming": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "overfishing": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "threaten": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "habitat": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "marine": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "biologists": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "are": [
+      {
+        "doc_id": 1,
+        "frequency": 2
+      }
+    ],
+    "working": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "tirelessly": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "understand": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "deep-sea": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "ecosystems": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "before": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "they": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "irreversibly": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ],
+    "damaged": [
+      {
+        "doc_id": 1,
+        "frequency": 1
+      }
+    ]
+  }
+}
