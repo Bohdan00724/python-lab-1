@@ -1,16 +1,14 @@
+import pathlib
 import re
-from pathlib import Path
+import unicodedata
 
-def stream_documents(folder_path: Path):
-    """Ліниве читання текстових файлів по одному."""
-    for file_path in folder_path.glob("*.txt"):
-        if file_path.is_file():
-            with open(file_path, "r", encoding="utf-8") as file:
-                yield file.read()
+def iter_documents(corpus_path: pathlib.Path):
+    for file_path in corpus_path.rglob("*.txt"):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            yield f.read()
 
-def extract_tokens(text: str):
-    """Очищення та токенізація тексту."""
-    clean_text = text.lower()
-    pattern = re.compile(r'[a-z0-9]+')
-    for match in pattern.finditer(clean_text):
+def tokenize(text: str):
+    text = unicodedata.normalize('NFKC', text.lower())
+    pattern = re.compile(r"[\w'-]+\b")
+    for match in pattern.finditer(text):
         yield match.group()
