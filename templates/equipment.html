@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Облік обладнання компанії</h2>
+
+<div class="row">
+    <!-- Ліва колонка: Форма видачі -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm border-primary">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Зафіксувати видачу</h5>
+                <form action="/equipment" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Оберіть працівника</label>
+                        <select name="employee_id" class="form-select" required>
+                            <option value="" disabled selected>Список працівників...</option>
+                            {% for emp in employees %}
+                            <option value="{{ emp.HiredEmployeeID }}">{{ emp.FullName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Що видано? (Ноутбук, перепустка)</label>
+                        <input type="text" name="item_name" class="form-control" required placeholder="Наприклад: Ноутбук Dell XPS">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Зберегти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Права колонка: Таблиця виданого -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Історія видачі</h5>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Працівник</th>
+                            <th>Обладнання / Доступи</th>
+                            <th>Дата видачі</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in equipment %}
+                        <tr>
+                            <td>{{ item.EquipmentID }}</td>
+                            <td><strong>{{ item.EmployeeName }}</strong></td>
+                            <td>{{ item.ItemName }}</td>
+                            <td class="text-muted">{{ item.IssueDate }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Обладнання ще не видавалося.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

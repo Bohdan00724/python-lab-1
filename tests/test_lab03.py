@@ -1,14 +1,15 @@
 import heapq
 from pathlib import Path
+
 import pytest
 
-from src.findex.core import tokenize
-from src.findex.decorators import timed
-from src.findex.index import Index, Posting, open_index
-from src.findex.parser import And, Not, Or, Phrase, QuerySyntaxError, Term, parse_query
-from src.findex.ranking import BM25, Scorer, SearchResult, TfIdf
-from src.findex.search import clear_search_cache, get_search_cache_info, search
-from src.findex.snippets import build_snippet
+from findex.core import tokenize
+from findex.decorators import timed
+from findex.index import Index, Posting, open_index
+from findex.parser import And, Not, Or, Phrase, QuerySyntaxError, Term, parse_query
+from findex.ranking import BM25, Scorer, SearchResult, TfIdf
+from findex.search import clear_search_cache, get_search_cache_info, search
+from findex.snippets import build_snippet
 
 
 @pytest.fixture
@@ -76,10 +77,7 @@ def test_parser_builds_exact_ast_and_supports_operators() -> None:
     assert parsed_tree == expected_tree
 
     dsl_tree = (
-        Term("python")
-        & (Term("async") | Term("await"))
-        & ~Term("java")
-        & Phrase(("event", "loop"))
+        Term("python") & (Term("async") | Term("await")) & ~Term("java") & Phrase(("event", "loop"))
     )
     assert parsed_tree == dsl_tree
 
@@ -154,6 +152,8 @@ def test_timed_wraps_and_lru_cache_hits(sample_index: tuple[Index, Path]) -> Non
 
 def test_snippet_highlighting(sample_index: tuple[Index, Path]) -> None:
     idx, _ = sample_index
-    snippet = build_snippet(idx.doc_path(0), terms=["python"], phrases=[("event", "loop")], window=80)
+    snippet = build_snippet(
+        idx.doc_path(0), terms=["python"], phrases=[("event", "loop")], window=80
+    )
     assert "**Python**" in snippet
     assert "**event loop**" in snippet

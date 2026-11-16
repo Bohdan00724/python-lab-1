@@ -1,15 +1,19 @@
-from collections import defaultdict
-from dataclasses import dataclass, field
 import heapq
 import math
-from typing import Iterable, Protocol, runtime_checkable
+from collections import defaultdict
+from collections.abc import Iterable
+from dataclasses import dataclass, field
+from typing import Literal, Protocol, runtime_checkable
 
-from src.findex.index import Index, Posting
+from findex.index import Index, Posting
+
+ScorerName = Literal["bm25", "tfidf"]
 
 
 @dataclass(frozen=True, order=True, slots=True)
 class SearchResult:
-    """Результат поиска, упорядочиваемый по убыванию score (через heapq.nlargest)."""
+    """Результат пошуку, впорядкований за спаданням score (через heapq.nlargest)."""
+
     score: float
     doc_id: int
     path: str = field(default="", compare=False)
@@ -18,15 +22,14 @@ class SearchResult:
 
 @runtime_checkable
 class Scorer(Protocol):
-    """Протокол для взаимозаменяемых алгоритмов ранжирования (duck typing)."""
+    """Протокол для взаємозамінних алгоритмів ранжування (duck typing)."""
 
-    def score(self, term: str, posting: Posting, index: Index) -> float:
-        ...
+    def score(self, term: str, posting: Posting, index: Index) -> float: ...
 
 
 @dataclass(frozen=True, slots=True)
 class TfIdf:
-    """Классическое ранжирование TF-IDF с нормализацией по длине документа."""
+    """Класичне ранжування TF-IDF з нормалізацією за довжиною документа."""
 
     def score(self, term: str, posting: Posting, index: Index) -> float:
         n_docs = index.num_docs
@@ -42,7 +45,8 @@ class TfIdf:
 
 @dataclass(frozen=True, slots=True)
 class BM25:
-    """Ранжирование Okapi BM25 с насыщением частоты и нормализацией длины."""
+    """Ранжування Okapi BM25 з насиченням частоти та нормалізацією довжини."""
+
     k1: float = 1.5
     b: float = 0.75
 
@@ -61,6 +65,13 @@ class BM25:
         return idf * ((tf * (self.k1 + 1.0)) / denom)
 
 
+def get_scorer(name: ScorerName) -> Scorer:
+    """Фабрика скорерів за рядковим Literal-іменем."""
+    if name == "bm25":
+        return BM25()
+    return TfIdf()
+
+
 def rank_documents(
     index: Index,
     query_terms: Iterable[str],
@@ -68,7 +79,7 @@ def rank_documents(
     allowed_docs: set[int] | None = None,
     top_k: int = 5,
 ) -> list[SearchResult]:
-    """Накапливает баллы по терминам запроса и возвращает топ-k результатов через heapq.nlargest."""
+    """Накопичує бали за термінами запиту та повертає топ-k через heapq.nlargest."""
     scores: defaultdict[int, float] = defaultdict(float)
 
     for term in query_terms:

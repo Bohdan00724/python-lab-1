@@ -1,21 +1,48 @@
-import argparse
+import logging
+from collections.abc import Sequence
 from dataclasses import replace
 from functools import lru_cache
+from typing import Literal, NamedTuple
 
-from src.findex.decorators import timed
-from src.findex.index import Index, open_index
-from src.findex.parser import parse_query
-from src.findex.ranking import BM25, Scorer, SearchResult, TfIdf, rank_documents
-from src.findex.snippets import build_snippet
+from findex.decorators import timed
+from findex.index import Index, merge_postings
+from findex.parser import parse_query
+from findex.ranking import BM25, Scorer, SearchResult, rank_documents
+from findex.snippets import build_snippet
 
+EngineName = Literal["merge", "set"]
+
+
+class CacheStats(NamedTuple):
+    hits: int
+    misses: int
+    maxsize: int | None
+    currsize: int
+
+
+logger = logging.getLogger(__name__)
 _INDEX_REGISTRY: dict[tuple[int, int, int], Index] = {}
+
+
+def intersect_terms(index: Index, terms: Sequence[str], engine: EngineName = "merge") -> set[int]:
+    """Перетин документів за списком термінів через 'merge' або 'set'."""
+    if not terms:
+        return set()
+    postings_lists = [index[t] if t in index else [] for t in terms]
+    if any(not plist for plist in postings_lists):
+        return set()
+
+    if engine == "merge":
+        return set(merge_postings(postings_lists))
+    doc_sets = [{p.doc_id for p in plist} for plist in postings_lists]
+    return doc_sets[0].intersection(*doc_sets[1:])
 
 
 @lru_cache(maxsize=128)
 def _cached_query_eval(
     index_key: tuple[int, int, int], query: str
 ) -> tuple[frozenset[int], tuple[str, ...], tuple[tuple[str, ...], ...]]:
-    """Кэширует путь: строка запроса -> множество подходящих doc_id."""
+    """Кешує шлях: рядок запиту -> множина відповідних doc_id."""
     index = _INDEX_REGISTRY[index_key]
     ast = parse_query(query)
     matched_ids = frozenset(ast.evaluate(index))
@@ -26,8 +53,9 @@ def clear_search_cache() -> None:
     _cached_query_eval.cache_clear()
 
 
-def get_search_cache_info():
-    return _cached_query_eval.cache_info()
+def get_search_cache_info() -> CacheStats:
+    info = _cached_query_eval.cache_info()
+    return CacheStats(info.hits, info.misses, info.maxsize, info.currsize)
 
 
 @timed
@@ -35,10 +63,11 @@ def search(
     index: Index,
     query: str,
     scorer: Scorer | None = None,
+    engine: EngineName = "merge",
     top_k: int = 5,
     with_snippets: bool = True,
 ) -> list[SearchResult]:
-    """Выполняет разбор запроса, кэшируемую фильтрацию, ранжирование и генерацию сниппетов."""
+    """Виконує розбір запиту, кешовану фільтрацію, ранжування та генерацію сніпетів."""
     active_scorer: Scorer = scorer if scorer is not None else BM25()
     index_key = (id(index), index.num_docs, len(index))
     _INDEX_REGISTRY[index_key] = index
@@ -48,7 +77,13 @@ def search(
     hits_after = _cached_query_eval.cache_info().hits
 
     cache_status = "CACHE HIT" if hits_after > hits_before else "CACHE MISS"
-    print(f"[CACHE] {cache_status} для запиту {query!r} ({_cached_query_eval.cache_info()})")
+    logger.debug(
+        "[CACHE] %s для запиту %r (engine=%s, %s)",
+        cache_status,
+        query,
+        engine,
+        _cached_query_eval.cache_info(),
+    )
 
     if not matched_ids:
         return []
@@ -70,41 +105,3 @@ def search(
         snippet = build_snippet(item.path, score_terms, phrases=list(phrases), window=80)
         enriched.append(replace(item, snippet=snippet))
     return enriched
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Ранжований пошук у findex")
-    parser.add_argument("index_file", help="Шлях до файлу індексу (.json)")
-    parser.add_argument("query", help="Пошуковий запит (підтримує AND, OR, NOT, дужки, \"фрази\")")
-    parser.add_argument("--scorer", choices=["bm25", "tfidf"], default="bm25", help="Алгоритм ранжування")
-    parser.add_argument("--top-k", type=int, default=5, help="Кількість результатів у топі")
-    parser.add_argument(
-        "--repeat",
-        action="store_true",
-        help="Виконати запит двічі для демонстрації @lru_cache (CACHE HIT)",
-    )
-    args = parser.parse_args()
-
-    scorer: Scorer = BM25() if args.scorer == "bm25" else TfIdf()
-
-    with open_index(args.index_file) as idx:
-        print(f"Відкрито індекс: {idx!r}")
-        results = search(idx, args.query, scorer=scorer, top_k=args.top_k)
-
-        if args.repeat:
-            print("\n--- Повторний запуск того ж запиту ---")
-            results = search(idx, args.query, scorer=scorer, top_k=args.top_k)
-
-        if not results:
-            print("\nНічого не знайдено.")
-            return
-
-        print(f"\nТоп-{len(results)} результатів ({args.scorer.upper()}):")
-        for rank, res in enumerate(results, start=1):
-            print(f"{rank}. Doc #{res.doc_id} ({res.path}) | score={res.score:.4f}")
-            if res.snippet:
-                print(f"   Сніпет: {res.snippet}")
-
-
-if __name__ == "__main__":
-    main()

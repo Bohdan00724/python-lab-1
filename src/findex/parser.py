@@ -1,15 +1,16 @@
-from dataclasses import dataclass
 import re
-from src.findex.core import tokenize
-from src.findex.index import Index
+from dataclasses import dataclass
+
+from findex.core import tokenize
+from findex.index import Index
 
 
 class QuerySyntaxError(ValueError):
-    """Ошибка синтаксиса поискового запроса."""
+    """Помилка синтаксису пошукового запиту."""
 
 
 class QueryNode:
-    """Базовый узел AST-дерева запроса с поддержкой операторов &, |, ~."""
+    """Базовий вузол AST-дерева запиту з підтримкою операторів &, |, ~."""
 
     def __and__(self, other: "QueryNode") -> "And":
         return And(self, other)
@@ -24,11 +25,11 @@ class QueryNode:
         raise NotImplementedError
 
     def positive_terms(self) -> list[str]:
-        """Возвращает термины (кроме отрицаний NOT) для подсчёта релевантности."""
+        """Повертає терміни (крім заперечень NOT) для підрахунку релевантності."""
         return []
 
     def phrases(self) -> list[tuple[str, ...]]:
-        """Возвращает точные фразы из запроса (для подсветки сниппетов)."""
+        """Повертає точні фрази із запиту (для підсвічування сніпетів)."""
         return []
 
 
@@ -53,7 +54,7 @@ class Phrase(QueryNode):
         if not self.terms:
             return set()
         if not index.store_positions:
-            raise ValueError("Фразовый поиск требует индекс с сохранёнными позициями слов.")
+            raise ValueError("Фразовий пошук потребує індекс зі збереженими позиціями слів.")
         if len(self.terms) == 1:
             return Term(self.terms[0]).evaluate(index)
 
@@ -63,7 +64,8 @@ class Phrase(QueryNode):
                 return set()
             postings_per_term.append({p.doc_id: set(p.positions) for p in index[term]})
 
-        common_docs = set.intersection(*(set(d.keys()) for d in postings_per_term))
+        doc_sets = [set(d.keys()) for d in postings_per_term]
+        common_docs = doc_sets[0].intersection(*doc_sets[1:])
         matched_docs: set[int] = set()
 
         for doc_id in common_docs:
@@ -125,18 +127,18 @@ class Not(QueryNode):
 
 @dataclass(frozen=True, slots=True)
 class _QToken:
-    kind: str  # WORD, PHRASE, AND, OR, NOT, LPAREN, RPAREN
+    kind: str
     value: str
 
 
 _TOKEN_RE = re.compile(
-    r'\s*(?:'
-    r'"([^"]*)"'          # группа 1: фраза в кавычках
-    r'|(\()'              # группа 2: (
-    r'|(\))'              # группа 3: )
-    r'|(&|\|\||\| |~)'    # группа 4: символьные операторы
-    r"|([\w'-]+)"         # группа 5: слово или AND/OR/NOT
-    r')'
+    r"\s*(?:"
+    r'"([^"]*)"'
+    r"|(\()"
+    r"|(\))"
+    r"|(&|\|\||\||~)"
+    r"|([\w'-]+)"
+    r")"
 )
 
 
@@ -149,9 +151,14 @@ def _lex_query(query: str) -> list[_QToken]:
             continue
         match = _TOKEN_RE.match(query, pos)
         if not match:
-            raise QuerySyntaxError(f"Неожиданный символ в запросе на позиции {pos}: {query[pos]!r}")
+            raise QuerySyntaxError(f"Неочікуваний символ у запиті на позиції {pos}: {query[pos]!r}")
         pos = match.end()
-        phrase, lparen, rparen, sym_op, word = match.groups()
+        phrase = match.group(1)
+        lparen = match.group(2)
+        rparen = match.group(3)
+        sym_op = match.group(4)
+        word = match.group(5)
+
         if phrase is not None:
             tokens.append(_QToken("PHRASE", phrase))
         elif lparen is not None:
@@ -176,15 +183,6 @@ def _lex_query(query: str) -> list[_QToken]:
 
 
 class _RecursiveDescentParser:
-    """
-    Грамматика:
-      expr     -> or_expr
-      or_expr  -> and_expr ( 'OR' and_expr )*
-      and_expr -> not_expr ( ['AND'] not_expr )*
-      not_expr -> 'NOT' not_expr | primary
-      primary  -> '(' expr ')' | PHRASE | WORD
-    """
-
     def __init__(self, tokens: list[_QToken]) -> None:
         self.tokens = tokens
         self.pos = 0
@@ -199,10 +197,11 @@ class _RecursiveDescentParser:
 
     def parse(self) -> QueryNode:
         if not self.tokens:
-            raise QuerySyntaxError("Пустой поисковый запрос.")
+            raise QuerySyntaxError("Порожній пошуковий запит.")
         node = self.parse_or()
-        if self.current() is not None:
-            raise QuerySyntaxError(f"Лишний токен в запросе: {self.current().value!r}")
+        extra = self.current()
+        if extra is not None:
+            raise QuerySyntaxError(f"Зайвий токен у запиті: {extra.value!r}")
         return node
 
     def parse_or(self) -> QueryNode:
@@ -221,7 +220,6 @@ class _RecursiveDescentParser:
                 right = self.parse_not()
                 node = And(node, right)
             elif tok.kind in ("WORD", "PHRASE", "NOT", "LPAREN"):
-                # Неявный AND: например, `python (async OR await) NOT java "event loop"`
                 right = self.parse_not()
                 node = And(node, right)
             else:
@@ -238,14 +236,14 @@ class _RecursiveDescentParser:
     def parse_primary(self) -> QueryNode:
         tok = self.current()
         if tok is None:
-            raise QuerySyntaxError("Неожиданный конец запроса.")
+            raise QuerySyntaxError("Неочікуваний кінець запиту.")
 
         if tok.kind == "LPAREN":
             self.consume()
             node = self.parse_or()
             closing = self.current()
             if closing is None or closing.kind != "RPAREN":
-                raise QuerySyntaxError("Не закрыта скобка ')' в запросе.")
+                raise QuerySyntaxError("Не закрита дужка ')' у запиті.")
             self.consume()
             return node
 
@@ -253,7 +251,7 @@ class _RecursiveDescentParser:
             self.consume()
             norm_words = tuple(tokenize(tok.value))
             if not norm_words:
-                raise QuerySyntaxError("Пустая фраза в кавычках.")
+                raise QuerySyntaxError("Порожня фраза в лапках.")
             if len(norm_words) == 1:
                 return Term(norm_words[0])
             return Phrase(norm_words)
@@ -262,16 +260,16 @@ class _RecursiveDescentParser:
             self.consume()
             norm_words = list(tokenize(tok.value))
             if not norm_words:
-                raise QuerySyntaxError(f"Некорректный термин: {tok.value!r}")
-            node: QueryNode = Term(norm_words[0])
-            for extra in norm_words[1:]:
-                node = And(node, Term(extra))
-            return node
+                raise QuerySyntaxError(f"Некоректний термін: {tok.value!r}")
+            term_node: QueryNode = Term(norm_words[0])
+            for extra_word in norm_words[1:]:
+                term_node = And(term_node, Term(extra_word))
+            return term_node
 
-        raise QuerySyntaxError(f"Ожидался термин или '(', получено: {tok.value!r}")
+        raise QuerySyntaxError(f"Очікувався термін або '(', отримано: {tok.value!r}")
 
 
 def parse_query(query: str) -> QueryNode:
-    """Разбирает строку запроса в AST-дерево методом рекурсивного спуска."""
+    """Розбирає рядок запиту в AST-дерево методом рекурсивного спуску."""
     tokens = _lex_query(query)
     return _RecursiveDescentParser(tokens).parse()

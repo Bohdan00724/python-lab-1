@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Панель IT</h2>
+
+<!-- Блок 1: Завдання для нових працівників (Onboarding) -->
+<div class="card shadow-sm border-primary">
+    <div class="card-body">
+        <h5 class="card-title mb-4">Актуальні завдання (Onboarding)</h5>
+        <table class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Новий працівник</th>
+                    <th>Завдання</th>
+                    <th>Статус</th>
+                    <th>Дія</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.TaskID }}</td>
+                    <td><strong>{{ task.EmployeeName }}</strong></td>
+                    <td>{{ task.TaskDescription }}</td>
+                    <td><span class="badge bg-warning text-dark">{{ task.Status }}</span></td>
+                    <td>
+                        <form action="/complete_task/{{ task.TaskID }}" method="POST">
+                            <button type="submit" class="btn btn-success btn-sm">Виконано</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Нових завдань немає. Ви чудово попрацювали!</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Блок 2: Збір обладнання у звільнених (Offboarding) -->
+<div class="card shadow-sm border-danger mt-5">
+    <div class="card-body">
+        <h5 class="card-title text-danger mb-4">Обладнання до повернення (Звільнені працівники)</h5>
+        <table class="table table-bordered table-hover">
+            <thead class="table-danger">
+                <tr>
+                    <th>ID Речі</th>
+                    <th>Звільнений працівник</th>
+                    <th>Що треба забрати</th>
+                    <th>Дія IT</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in return_items %}
+                <tr>
+                    <td>{{ item.EquipmentID }}</td>
+                    <td><strong>{{ item.EmployeeName }}</strong></td>
+                    <td>{{ item.ItemName }}</td>
+                    <td>
+                        <form action="/return_equipment/{{ item.EquipmentID }}" method="POST">
+                            <button type="submit" class="btn btn-warning btn-sm">Забрано (Повернуто)</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Немає обладнання для повернення.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

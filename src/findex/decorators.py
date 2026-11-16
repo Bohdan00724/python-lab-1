@@ -1,24 +1,24 @@
 import functools
+import logging
 import time
-from typing import Any, Callable, TypeVar
+from typing import Callable, ParamSpec, TypeVar
 
-F = TypeVar("F", bound=Callable[..., Any])
+P = ParamSpec("P")
+R = TypeVar("R")
+
+logger = logging.getLogger(__name__)
 
 
-def timed(func: F) -> F:
-    """Декоратор для замера времени выполнения функций с сохранением метаданных."""
+def timed(func: Callable[P, R]) -> Callable[P, R]:
+    """Декоратор для вимірювання часу виконання функцій зі збереженням метаданих."""
 
     @functools.wraps(func)
-    def wrapper(*args: Any, **kwargs: Any) -> Any:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         start = time.perf_counter()
         try:
             return func(*args, **kwargs)
         finally:
             elapsed = time.perf_counter() - start
-            wrapper.last_elapsed = elapsed  # type: ignore[attr-defined]
-            wrapper.call_count += 1  # type: ignore[attr-defined]
-            print(f"[TIMED] {func.__qualname__}: {elapsed * 1000:.3f} ms")
+            logger.info("[TIMED] %s: %.3f ms", func.__qualname__, elapsed * 1000)
 
-    wrapper.last_elapsed = 0.0  # type: ignore[attr-defined]
-    wrapper.call_count = 0  # type: ignore[attr-defined]
-    return wrapper  # type: ignore[return-value]
+    return wrapper

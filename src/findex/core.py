@@ -1,25 +1,25 @@
 import pathlib
 import re
 import unicodedata
-from typing import Iterator
+from collections.abc import Iterator
 
 
 def iter_document_files(corpus_path: pathlib.Path) -> Iterator[tuple[pathlib.Path, str]]:
-    """Лениво читает .txt файлы в отсортированном порядке и возвращает (путь, текст)."""
+    """Ліниво читає .txt файли у відсортованому порядку та повертає (шлях, текст)."""
     for file_path in sorted(corpus_path.rglob("*.txt")):
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             yield file_path, f.read()
 
 
 def iter_documents(corpus_path: pathlib.Path) -> Iterator[str]:
-    """Лениво возвращает только тексты документов (совместимость с лаб 1–2)."""
+    """Ліниво повертає лише тексти документів."""
     for _, text in iter_document_files(corpus_path):
         yield text
 
 
 def tokenize(text: str) -> Iterator[str]:
-    """Нормализует текст и извлекает токены."""
-    text = unicodedata.normalize("NFKC", text.lower())
+    """Нормалізує текст і витягує токени."""
+    normalized = unicodedata.normalize("NFKC", text).lower()
     pattern = re.compile(r"[\w'-]+\b")
-    for match in pattern.finditer(text):
+    for match in pattern.finditer(normalized):
         yield match.group()

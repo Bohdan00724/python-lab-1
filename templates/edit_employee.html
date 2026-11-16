@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Редагування працівника</h2>
+
+<div class="card shadow-sm mb-5" style="max-width: 600px;">
+    <div class="card-body">
+        <form action="/edit_employee/{{ emp.HiredEmployeeID }}" method="POST">
+            <div class="mb-3">
+                <label class="form-label">Ім'я</label>
+                <input type="text" name="first_name" class="form-control" value="{{ emp.FirstName }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Прізвище</label>
+                <input type="text" name="last_name" class="form-control" value="{{ emp.LastName }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Посада</label>
+                <input type="text" name="position" class="form-control" value="{{ emp.Position }}" required>
+            </div>
+            
+            <!-- НОВИЙ БЛОК: Редагування відділу -->
+            <div class="mb-4">
+                <label class="form-label">Відділ (Роль)</label>
+                <select name="department" class="form-select" required>
+                    <option value="IT employee" {% if emp.Department == 'IT employee' %}selected{% endif %}>IT employee</option>
+                    <option value="IT manager" {% if emp.Department == 'IT manager' %}selected{% endif %}>IT manager</option>
+                    <option value="HR employee" {% if emp.Department == 'HR employee' %}selected{% endif %}>HR employee</option>
+                    <option value="business department manager" {% if emp.Department == 'business department manager' %}selected{% endif %}>business department manager</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-success">Зберегти зміни</button>
+            <a href="/employees" class="btn btn-secondary ms-2">Скасувати</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

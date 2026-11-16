@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-10 mx-auto">
+        <h2 class="mb-4">Особистий кабінет</h2>
+        
+        <div class="card shadow-sm border-info mb-4">
+            <div class="card-body">
+                <h5 class="card-title text-info mb-3">Моє обладнання та доступи</h5>
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Що видано</th>
+                            <th>Дата отримання</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in equipment %}
+                        <tr>
+                            <td>{{ item.ItemName }}</td>
+                            <td>{{ item.IssueDate }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">За вами ще не закріплено жодного обладнання.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <a href="/employees" class="btn btn-outline-secondary">Перейти до структури компанії</a>
+    </div>
+</div>
+{% endblock %}

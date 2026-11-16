@@ -1,15 +1,12 @@
-from collections import defaultdict
-from collections.abc import Iterator, Mapping
+import json
+from collections.abc import Generator, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import dataclass
 from functools import cached_property
-import json
 from pathlib import Path
-from typing import TextIO
-import tracemalloc
+from typing import Any, TextIO
 
-from src.findex.core import iter_document_files, tokenize
-from src.findex.decorators import timed
+from findex.decorators import timed
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,23 +22,51 @@ class Posting:
     positions: tuple[int, ...] = ()
 
 
+def merge_postings(postings_lists: Sequence[Sequence[Posting]]) -> list[int]:
+    """Перетин відсортованих списків постінгів за doc_id (алгоритм merge)."""
+    if not postings_lists:
+        return []
+    if any(len(plist) == 0 for plist in postings_lists):
+        return []
+
+    ordered = sorted(postings_lists, key=len)
+    result = [p.doc_id for p in ordered[0]]
+
+    for plist in ordered[1:]:
+        next_result: list[int] = []
+        i = 0
+        j = 0
+        while i < len(result) and j < len(plist):
+            doc_a = result[i]
+            doc_b = plist[j].doc_id
+            if doc_a == doc_b:
+                next_result.append(doc_a)
+                i += 1
+                j += 1
+            elif doc_a < doc_b:
+                i += 1
+            else:
+                j += 1
+        result = next_result
+        if not result:
+            break
+
+    return result
+
+
 class Index(Mapping[str, list[Posting]]):
-    """Инвертированный индекс с интерфейсом Python Mapping."""
+    """Інвертований індекс з інтерфейсом Python Mapping."""
 
     def __init__(self, store_positions: bool = True) -> None:
         self.store_positions = store_positions
-        self._postings: defaultdict[str, list[Posting]] = defaultdict(list)
+        self._postings: dict[str, list[Posting]] = {}
         self._doc_meta: dict[int, DocMeta] = {}
 
-    # --- Dunder-методы для Mapping и модели объектов ---
     def __len__(self) -> int:
         return len(self._postings)
 
-    def __contains__(self, key: object) -> bool:
-        return isinstance(key, str) and key in self._postings
-
-    def __getitem__(self, term: str) -> list[Posting]:
-        return self._postings[term]
+    def __getitem__(self, key: str, /) -> list[Posting]:
+        return self._postings[key]
 
     def __iter__(self) -> Iterator[str]:
         return iter(self._postings)
@@ -53,7 +78,6 @@ class Index(Mapping[str, list[Posting]]):
             f"store_positions={self.store_positions})"
         )
 
-    # --- Свойства и статистика корпуса ---
     @property
     def num_docs(self) -> int:
         return len(self._doc_meta)
@@ -66,7 +90,7 @@ class Index(Mapping[str, list[Posting]]):
         return total_len / len(self._doc_meta)
 
     def df(self, term: str) -> int:
-        """Document frequency: в скольких документах встречается термин."""
+        """Document frequency: у скількох документах зустрічається термін."""
         return len(self._postings.get(term, ()))
 
     def doc_length(self, doc_id: int) -> int:
@@ -78,56 +102,65 @@ class Index(Mapping[str, list[Posting]]):
     def all_doc_ids(self) -> set[int]:
         return set(self._doc_meta.keys())
 
-    # --- Построение и сериализация ---
-    def add_document(self, doc_id: int, tokens: list[str], path: str = "") -> None:
+    def clear(self) -> None:
+        """Очищає всі структури індексу та звільняє пам'ять."""
+        self.__dict__.pop("avg_doc_length", None)
+        self._postings.clear()
+        self._doc_meta.clear()
+
+    def add_document(self, doc_id: int, tokens: Sequence[str], path: str = "") -> None:
         self.__dict__.pop("avg_doc_length", None)
 
+        if doc_id in self._doc_meta:
+            for plist in self._postings.values():
+                plist[:] = [p for p in plist if p.doc_id != doc_id]
+
         self._doc_meta[doc_id] = DocMeta(length=len(tokens), path=path)
-        pos_map: dict[str, list[int]] = defaultdict(list)
+        pos_map: dict[str, list[int]] = {}
         for pos, token in enumerate(tokens):
-            pos_map[token].append(pos)
+            pos_map.setdefault(token, []).append(pos)
 
         for term, positions in pos_map.items():
-            self._postings[term].append(
-                Posting(
-                    doc_id=doc_id,
-                    frequency=len(positions),
-                    positions=tuple(positions) if self.store_positions else (),
-                )
+            plist = self._postings.setdefault(term, [])
+            new_posting = Posting(
+                doc_id=doc_id,
+                frequency=len(positions),
+                positions=tuple(positions) if self.store_positions else (),
             )
+            if plist and plist[-1].doc_id > doc_id:
+                plist.append(new_posting)
+                plist.sort(key=lambda p: p.doc_id)
+            else:
+                plist.append(new_posting)
 
     @timed
-    def build_from_pipeline(self, pipeline) -> None:
-        for item in pipeline:
-            if len(item) == 3:
-                doc_id, tokens, path = item
-            else:
-                doc_id, tokens = item
-                path = ""
+    def build_from_pipeline(
+        self,
+        pipeline: Iterable[tuple[int, Sequence[str], str]],
+    ) -> None:
+        for doc_id, tokens, path in pipeline:
             self.add_document(doc_id, tokens, path=path)
 
     def save_json(self, filepath: str | Path) -> None:
-        data = {
+        serialized_postings: dict[str, list[dict[str, object]]] = {}
+        for term, plist in self._postings.items():
+            entries: list[dict[str, object]] = []
+            for p in plist:
+                entry: dict[str, object] = {
+                    "doc_id": p.doc_id,
+                    "frequency": p.frequency,
+                }
+                if self.store_positions:
+                    entry["positions"] = list(p.positions)
+                entries.append(entry)
+            serialized_postings[term] = entries
+
+        data: dict[str, object] = {
             "store_positions": self.store_positions,
             "doc_meta": {
-                str(k): {"length": v.length, "path": v.path}
-                for k, v in self._doc_meta.items()
+                str(k): {"length": v.length, "path": v.path} for k, v in self._doc_meta.items()
             },
-            "postings": {
-                term: [
-                    {
-                        "doc_id": p.doc_id,
-                        "frequency": p.frequency,
-                        **(
-                            {"positions": list(p.positions)}
-                            if self.store_positions
-                            else {}
-                        ),
-                    }
-                    for p in plist
-                ]
-                for term, plist in self._postings.items()
-            },
+            "postings": serialized_postings,
         }
         with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -135,80 +168,51 @@ class Index(Mapping[str, list[Posting]]):
     @classmethod
     @timed
     def from_stream(cls, stream: TextIO) -> "Index":
-        data = json.load(stream)
-        store_positions = data.get("store_positions", True)
+        raw_data: dict[str, Any] = json.load(stream)
+        store_positions = bool(raw_data.get("store_positions", True))
         index = cls(store_positions=store_positions)
-        index._doc_meta = {
-            int(k): DocMeta(length=v["length"], path=v.get("path", ""))
-            for k, v in data["doc_meta"].items()
-        }
-        index._postings = defaultdict(
-            list,
-            {
-                term: [
+
+        doc_meta_raw: dict[str, dict[str, Any]] = raw_data["doc_meta"]
+        for k, v in doc_meta_raw.items():
+            index._doc_meta[int(k)] = DocMeta(
+                length=int(v["length"]),
+                path=str(v.get("path", "")),
+            )
+
+        postings_raw: dict[str, list[dict[str, Any]]] = raw_data["postings"]
+        for term, plist in postings_raw.items():
+            items: list[Posting] = []
+            for p in plist:
+                raw_positions: list[int] = p.get("positions", [])
+                items.append(
                     Posting(
-                        doc_id=p["doc_id"],
-                        frequency=p["frequency"],
-                        positions=tuple(p.get("positions", ())),
+                        doc_id=int(p["doc_id"]),
+                        frequency=int(p["frequency"]),
+                        positions=tuple(int(pos) for pos in raw_positions),
                     )
-                    for p in plist
-                ]
-                for term, plist in data["postings"].items()
-            },
-        )
+                )
+            items.sort(key=lambda item: item.doc_id)
+            index._postings[str(term)] = items
+
         return index
 
     @classmethod
     def load_json(cls, filepath: str | Path) -> "Index":
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             return cls.from_stream(f)
 
 
 @contextmanager
-def open_index(path: str | Path) -> Iterator[Index]:
-    """Context manager для безопасной загрузки и освобождения ресурсов индекса."""
+def open_index(path: str | Path) -> Generator[Index, None, None]:
+    """Context manager для безпечного завантаження та звільнення ресурсів індексу."""
     file_obj: TextIO | None = None
     index: Index | None = None
     try:
-        file_obj = open(path, "r", encoding="utf-8")
+        file_obj = open(path, encoding="utf-8")
         index = Index.from_stream(file_obj)
         yield index
     finally:
         if file_obj is not None and not file_obj.closed:
             file_obj.close()
         if index is not None:
-            index._postings.clear()
-            index._doc_meta.clear()
-
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Построение инвертированного индекса")
-    parser.add_argument("data_dir", help="Шлях до папки з документами")
-    parser.add_argument("--out", required=True, help="Файл для збереження (.json)")
-    parser.add_argument(
-        "--no-positions",
-        action="store_true",
-        help="Не зберігати позиції слів (економія пам'яті, вимикає фразовий пошук)",
-    )
-    args = parser.parse_args()
-
-    print(f"Будуємо індекс з {args.data_dir}...")
-    tracemalloc.start()
-
-    idx = Index(store_positions=not args.no_positions)
-
-    def pipeline():
-        for doc_id, (file_path, text) in enumerate(iter_document_files(Path(args.data_dir))):
-            yield doc_id, list(tokenize(text)), str(file_path)
-
-    idx.build_from_pipeline(pipeline())
-
-    _, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-
-    print(f"Об'єкт індексу: {idx!r}")
-    print(f"Пікове використання пам'яті: {peak / 1024 / 1024:.4f} MB")
-    idx.save_json(args.out)
-    print(f"Збережено у {args.out}!")
+            index.clear()

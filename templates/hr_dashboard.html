@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 class="mb-4">Панель HR</h2>
+
+<div class="card shadow-sm mb-5">
+    <div class="card-body">
+        <h5 class="card-title mb-4">Реєстрація нового працівника</h5>
+        <form action="/add_employee" method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Ім'я</label>
+                    <input type="text" name="first_name" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Прізвище</label>
+                    <input type="text" name="last_name" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">Посада</label>
+                <input type="text" name="position" class="form-control" required>
+            </div>
+
+            <!-- НОВИЙ БЛОК: Вибір відділу -->
+           <div class="mb-3">
+                <label class="form-label">Відділ (Роль)</label>
+                <select name="department" class="form-select" required>
+                    <option value="IT employee">IT employee</option>
+                    <option value="IT manager">IT manager</option>
+                    <option value="HR employee">HR employee</option>
+                    <option value="business department manager">business department manager</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Дата виходу на роботу</label>
+                <input type="date" name="hire_date" class="form-control" required>
+            </div>
+            
+            <div class="card bg-light border-secondary mb-4">
+                <div class="card-body">
+                    <h6 class="card-subtitle mb-3 text-muted">Постановка задачі для IT-відділу</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Шаблон завдання</label>
+                        <select name="it_task_type" class="form-select">
+                            <option value="Стандартне робоче місце">Стандартне робоче місце</option>
+                            <option value="Тільки пошта">Тільки створення пошти</option>
+                            <option value="Повний пакет (VPN, сервери)">Повний пакет (VPN, сервери)</option>
+                            <option value="custom">Власне завдання (вказати нижче)</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Деталі або власне завдання</label>
+                        <textarea name="custom_task" class="form-control" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Додати у базу та створити завдання</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

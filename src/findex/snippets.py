@@ -1,16 +1,17 @@
-from pathlib import Path
 import re
+from collections.abc import Sequence
+from pathlib import Path
 
 
 def build_snippet(
     doc_path: str | Path,
-    terms: list[str],
-    phrases: list[tuple[str, ...]] = (),
+    terms: Sequence[str],
+    phrases: Sequence[tuple[str, ...]] = (),
     window: int = 80,
 ) -> str:
     """
-    Находит лучшее окно ±window символов вокруг совпадений в документе
-    и подсвечивает найденные термины/фразы в формате **слово**.
+    Знаходить найкраще вікно ±window символів навколо збігів у документі
+    та підсвічує знайдені терміни/фрази у форматі **слово**.
     """
     if not doc_path:
         return ""
@@ -40,7 +41,6 @@ def build_snippet(
     if not matches:
         return compact[: window * 2] + ("..." if len(compact) > window * 2 else "")
 
-    # Выбираем совпадение, в окне ±80 символов вокруг которого больше всего уникальных терминов
     best_match = matches[0]
     best_score = (-1, -1)
     for m in matches:
@@ -59,7 +59,6 @@ def build_snippet(
     start = max(0, center - window)
     end = min(len(compact), center + window)
 
-    # Аккуратно выравниваем края по пробелам, чтобы не резать слова
     if start > 0:
         space_pos = compact.rfind(" ", 0, start)
         if space_pos != -1 and start - space_pos < 15:
