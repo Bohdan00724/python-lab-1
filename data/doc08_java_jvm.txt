@@ -1,0 +1,1 @@
+Java runs on the Java Virtual Machine and powers enterprise backend systems with Spring Boot. Garbage collection, JIT compilation, and virtual threads make Java strong for high-throughput workloads.

@@ -1,83 +1,110 @@
 import argparse
-import time
-import tracemalloc
-import json
-from dataclasses import dataclass
-from collections import defaultdict
+from dataclasses import replace
+from functools import lru_cache
 
-@dataclass(frozen=True, slots=True)
-class DocMeta:
-    length: int
+from src.findex.decorators import timed
+from src.findex.index import Index, open_index
+from src.findex.parser import parse_query
+from src.findex.ranking import BM25, Scorer, SearchResult, TfIdf, rank_documents
+from src.findex.snippets import build_snippet
 
-@dataclass(frozen=True, slots=True)
-class Posting:
-    doc_id: int
-    frequency: int
+_INDEX_REGISTRY: dict[tuple[int, int, int], Index] = {}
 
-class InvertedIndex:
-    def __init__(self):
-        self.postings: defaultdict[str, list[Posting]] = defaultdict(list)
-        self.doc_meta: dict[int, DocMeta] = {}
 
-    @classmethod
-    def load_json(cls, filepath: str):
-        with open(filepath, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        index = cls()
-        index.doc_meta = {int(k): DocMeta(length=v["length"]) for k, v in data["doc_meta"].items()}
-        index.postings = defaultdict(list, {
-            term: [Posting(doc_id=p["doc_id"], frequency=p["frequency"]) for p in plist]
-            for term, plist in data["postings"].items()
-        })
-        return index
+@lru_cache(maxsize=128)
+def _cached_query_eval(
+    index_key: tuple[int, int, int], query: str
+) -> tuple[frozenset[int], tuple[str, ...], tuple[tuple[str, ...], ...]]:
+    """Кэширует путь: строка запроса -> множество подходящих doc_id."""
+    index = _INDEX_REGISTRY[index_key]
+    ast = parse_query(query)
+    matched_ids = frozenset(ast.evaluate(index))
+    return matched_ids, tuple(ast.positive_terms()), tuple(ast.phrases())
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("index_file", help="Файл індексу (.json)")
-    parser.add_argument("query", help="Пошуковий запит (слова через пробіл)")
-    parser.add_argument("--engine", choices=["merge", "set"], default="merge")
+
+def clear_search_cache() -> None:
+    _cached_query_eval.cache_clear()
+
+
+def get_search_cache_info():
+    return _cached_query_eval.cache_info()
+
+
+@timed
+def search(
+    index: Index,
+    query: str,
+    scorer: Scorer | None = None,
+    top_k: int = 5,
+    with_snippets: bool = True,
+) -> list[SearchResult]:
+    """Выполняет разбор запроса, кэшируемую фильтрацию, ранжирование и генерацию сниппетов."""
+    active_scorer: Scorer = scorer if scorer is not None else BM25()
+    index_key = (id(index), index.num_docs, len(index))
+    _INDEX_REGISTRY[index_key] = index
+
+    hits_before = _cached_query_eval.cache_info().hits
+    matched_ids, pos_terms, phrases = _cached_query_eval(index_key, query)
+    hits_after = _cached_query_eval.cache_info().hits
+
+    cache_status = "CACHE HIT" if hits_after > hits_before else "CACHE MISS"
+    print(f"[CACHE] {cache_status} для запиту {query!r} ({_cached_query_eval.cache_info()})")
+
+    if not matched_ids:
+        return []
+
+    score_terms = list(dict.fromkeys(pos_terms))
+    ranked = rank_documents(
+        index=index,
+        query_terms=score_terms,
+        scorer=active_scorer,
+        allowed_docs=set(matched_ids),
+        top_k=top_k,
+    )
+
+    if not with_snippets:
+        return ranked
+
+    enriched: list[SearchResult] = []
+    for item in ranked:
+        snippet = build_snippet(item.path, score_terms, phrases=list(phrases), window=80)
+        enriched.append(replace(item, snippet=snippet))
+    return enriched
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Ранжований пошук у findex")
+    parser.add_argument("index_file", help="Шлях до файлу індексу (.json)")
+    parser.add_argument("query", help="Пошуковий запит (підтримує AND, OR, NOT, дужки, \"фрази\")")
+    parser.add_argument("--scorer", choices=["bm25", "tfidf"], default="bm25", help="Алгоритм ранжування")
+    parser.add_argument("--top-k", type=int, default=5, help="Кількість результатів у топі")
+    parser.add_argument(
+        "--repeat",
+        action="store_true",
+        help="Виконати запит двічі для демонстрації @lru_cache (CACHE HIT)",
+    )
     args = parser.parse_args()
 
-    print(f"Завантажуємо індекс з {args.index_file}...")
-    tracemalloc.start()
-    start = time.time()
-    idx = InvertedIndex.load_json(args.index_file)
-    load_time = time.time() - start
-    _, peak = tracemalloc.get_traced_memory()
-    tracemalloc.stop()
-    
-    print(f"Завантажено за {load_time:.4f} сек.")
-    print(f"Пам'ять під час завантаження: {peak / 1024 / 1024:.4f} MB")
+    scorer: Scorer = BM25() if args.scorer == "bm25" else TfIdf()
 
-    terms = args.query.lower().split()
-    if not terms:
-        return
+    with open_index(args.index_file) as idx:
+        print(f"Відкрито індекс: {idx!r}")
+        results = search(idx, args.query, scorer=scorer, top_k=args.top_k)
 
-    print(f"\nШукаємо: {terms} (рушій: {args.engine})")
-    start_search = time.time()
-    postings_lists = [idx.postings.get(term, []) for term in terms]
-    
-    if any(not p for p in postings_lists):
-        print("Нічого не знайдено.")
-        return
+        if args.repeat:
+            print("\n--- Повторний запуск того ж запиту ---")
+            results = search(idx, args.query, scorer=scorer, top_k=args.top_k)
 
-    if args.engine == "set":
-        sets = [set(p.doc_id for p in plist) for plist in postings_lists]
-        common_docs = set.intersection(*sets)
-        results = [p for plist in postings_lists for p in plist if p.doc_id in common_docs]
-    else:
-        doc_sets = [set(p.doc_id for p in plist) for plist in postings_lists]
-        common_ids = set.intersection(*doc_sets)
-        results = [p for plist in postings_lists for p in plist if p.doc_id in common_ids]
+        if not results:
+            print("\nНічого не знайдено.")
+            return
 
-    unique_results = {p.doc_id: p for p in results}.values()
-    search_time = time.time() - start_search
-    
-    top = sorted(unique_results, key=lambda x: x.frequency, reverse=True)[:5]
-    print(f"Знайдено документів: {len(unique_results)} (за {search_time:.6f} сек)")
-    print("\nТоп-5 результатів (за частотою):")
-    for r in top:
-        print(f"  Doc ID: {r.doc_id} | Частота: {r.frequency}")
+        print(f"\nТоп-{len(results)} результатів ({args.scorer.upper()}):")
+        for rank, res in enumerate(results, start=1):
+            print(f"{rank}. Doc #{res.doc_id} ({res.path}) | score={res.score:.4f}")
+            if res.snippet:
+                print(f"   Сніпет: {res.snippet}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

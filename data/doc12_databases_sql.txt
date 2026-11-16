@@ -1,0 +1,1 @@
+Relational databases store records on disk and accelerate lookups using B-tree indexes. SQL transactions guarantee ACID properties through write-ahead logging and concurrency control.

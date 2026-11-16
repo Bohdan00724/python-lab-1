@@ -1,0 +1,1 @@
+Understanding the event loop in Python requires knowing how tasks, futures, and callbacks work. When an async function hits an await expression, control returns to the event loop so other tasks run.

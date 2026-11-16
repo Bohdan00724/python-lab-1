@@ -1,0 +1,1 @@
+Python is a readable high-level programming language with dynamic typing, lists, dictionaries, and generators. Developers value Python for clean syntax and rapid prototyping across automation and scripting tasks.

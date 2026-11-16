@@ -1,0 +1,1 @@
+Linux network servers use non-blocking sockets with epoll to multiplex thousands of connections. An OS-level event loop reacts to socket readiness events without spawning a thread per client.

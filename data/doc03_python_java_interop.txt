@@ -1,0 +1,1 @@
+Integrating Python with Java can be done through JPype or GraalVM. While Python uses an async event loop for concurrency, Java traditionally relies on JVM threads and executors.

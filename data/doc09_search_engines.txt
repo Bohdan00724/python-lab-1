@@ -1,0 +1,1 @@
+Information retrieval engines rely on an inverted index to map terms to postings lists. Ranking algorithms such as TF-IDF and BM25 score documents using term frequency and inverse document frequency.

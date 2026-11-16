@@ -1,0 +1,1 @@
+Python asyncio provides infrastructure for writing concurrent code using async and await syntax. At the heart of asyncio is the event loop, which schedules coroutines and handles non-blocking I/O.

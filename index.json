@@ -1,685 +1,2781 @@
 {
+  "store_positions": true,
   "doc_meta": {
     "0": {
-      "length": 81
+      "length": 30,
+      "path": "data\\doc01_python_asyncio.txt"
     },
     "1": {
-      "length": 64
+      "length": 32,
+      "path": "data\\doc02_event_loop_deep_dive.txt"
+    },
+    "2": {
+      "length": 28,
+      "path": "data\\doc03_python_java_interop.txt"
+    },
+    "3": {
+      "length": 28,
+      "path": "data\\doc04_python_basics.txt"
+    },
+    "4": {
+      "length": 55,
+      "path": "data\\doc05_python_long_guide.txt"
+    },
+    "5": {
+      "length": 26,
+      "path": "data\\doc06_python_spam.txt"
+    },
+    "6": {
+      "length": 30,
+      "path": "data\\doc07_async_js_rust.txt"
+    },
+    "7": {
+      "length": 28,
+      "path": "data\\doc08_java_jvm.txt"
+    },
+    "8": {
+      "length": 30,
+      "path": "data\\doc09_search_engines.txt"
+    },
+    "9": {
+      "length": 28,
+      "path": "data\\doc10_linux_networking.txt"
+    },
+    "10": {
+      "length": 25,
+      "path": "data\\doc11_python_decorators.txt"
+    },
+    "11": {
+      "length": 23,
+      "path": "data\\doc12_databases_sql.txt"
     }
   },
   "postings": {
-    "the": [
+    "python": [
       {
         "doc_id": 0,
-        "frequency": 6
+        "frequency": 1,
+        "positions": [
+          0
+        ]
       },
       {
         "doc_id": 1,
-        "frequency": 3
-      }
-    ],
-    "james": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "webb": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "space": [
-      {
-        "doc_id": 0,
-        "frequency": 4
-      }
-    ],
-    "telescope": [
-      {
-        "doc_id": 0,
-        "frequency": 4
-      }
-    ],
-    "is": [
-      {
-        "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          5
+        ]
       },
       {
-        "doc_id": 1,
-        "frequency": 1
-      }
-    ],
-    "a": [
-      {
-        "doc_id": 0,
-        "frequency": 1
+        "doc_id": 2,
+        "frequency": 2,
+        "positions": [
+          1,
+          12
+        ]
       },
       {
-        "doc_id": 1,
-        "frequency": 2
-      }
-    ],
-    "designed": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "primarily": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "to": [
-      {
-        "doc_id": 0,
-        "frequency": 2
+        "doc_id": 3,
+        "frequency": 2,
+        "positions": [
+          0,
+          16
+        ]
       },
       {
-        "doc_id": 1,
-        "frequency": 1
-      }
-    ],
-    "conduct": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "infrared": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "astronomy": [
-      {
-        "doc_id": 0,
-        "frequency": 2
-      }
-    ],
-    "as": [
-      {
-        "doc_id": 0,
-        "frequency": 2
-      }
-    ],
-    "largest": [
-      {
-        "doc_id": 0,
-        "frequency": 1
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          44
+        ]
       },
       {
-        "doc_id": 1,
-        "frequency": 1
-      }
-    ],
-    "optical": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "in": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "its": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "high": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "resolution": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "and": [
-      {
-        "doc_id": 0,
-        "frequency": 3
+        "doc_id": 5,
+        "frequency": 20,
+        "positions": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
       },
       {
-        "doc_id": 1,
-        "frequency": 3
+        "doc_id": 10,
+        "frequency": 2,
+        "positions": [
+          0,
+          19
+        ]
       }
     ],
-    "sensitivity": [
+    "asyncio": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 2,
+        "positions": [
+          1,
+          17
+        ]
       }
     ],
-    "allow": [
+    "provides": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      },
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
       }
     ],
-    "it": [
+    "infrastructure": [
       {
         "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "view": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "objects": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "too": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "old": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "distant": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "or": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "faint": [
-      {
-        "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          3
+        ]
       }
     ],
     "for": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          4
+        ]
+      },
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
+      },
+      {
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      },
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          49
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          25
+        ]
+      }
+    ],
+    "writing": [
+      {
+        "doc_id": 0,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      }
+    ],
+    "concurrent": [
+      {
+        "doc_id": 0,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
+      }
+    ],
+    "code": [
+      {
+        "doc_id": 0,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      },
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      }
+    ],
+    "using": [
+      {
+        "doc_id": 0,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
+      },
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
+      },
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
+      },
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
+      }
+    ],
+    "async": [
+      {
+        "doc_id": 0,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
       },
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          16
+        ]
+      },
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
       }
     ],
-    "hubble": [
+    "and": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 2,
+        "positions": [
+          10,
+          25
+        ]
+      },
+      {
+        "doc_id": 1,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      },
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          26
+        ]
+      },
+      {
+        "doc_id": 3,
+        "frequency": 3,
+        "positions": [
+          12,
+          20,
+          25
+        ]
+      },
+      {
+        "doc_id": 4,
+        "frequency": 2,
+        "positions": [
+          39,
+          52
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 3,
+        "positions": [
+          2,
+          7,
+          26
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 2,
+        "positions": [
+          7,
+          19
+        ]
+      },
+      {
+        "doc_id": 8,
+        "frequency": 2,
+        "positions": [
+          19,
+          26
+        ]
+      },
+      {
+        "doc_id": 10,
+        "frequency": 2,
+        "positions": [
+          6,
+          16
+        ]
+      },
+      {
+        "doc_id": 11,
+        "frequency": 2,
+        "positions": [
+          6,
+          20
+        ]
       }
     ],
-    "this": [
+    "await": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      },
+      {
+        "doc_id": 1,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
       }
     ],
-    "will": [
+    "syntax": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      },
+      {
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          19
+        ]
       }
     ],
-    "enable": [
+    "at": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          13
+        ]
       }
     ],
-    "investigations": [
+    "the": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 2,
+        "positions": [
+          14,
+          19
+        ]
+      },
+      {
+        "doc_id": 1,
+        "frequency": 2,
+        "positions": [
+          1,
+          25
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          19
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
       }
     ],
-    "across": [
+    "heart": [
       {
         "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "many": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "fields": [
-      {
-        "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          15
+        ]
       }
     ],
     "of": [
       {
         "doc_id": 0,
-        "frequency": 4
+        "frequency": 1,
+        "positions": [
+          16
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      }
+    ],
+    "is": [
+      {
+        "doc_id": 0,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
+      },
+      {
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "event": [
+      {
+        "doc_id": 0,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
       },
       {
         "doc_id": 1,
-        "frequency": 3
+        "frequency": 2,
+        "positions": [
+          2,
+          26
+        ]
+      },
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          16
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 2,
+        "positions": [
+          12,
+          21
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
       }
     ],
-    "cosmology": [
+    "loop": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          21
+        ]
+      },
+      {
+        "doc_id": 1,
+        "frequency": 2,
+        "positions": [
+          3,
+          27
+        ]
+      },
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 2,
+        "positions": [
+          13,
+          22
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          16
+        ]
       }
     ],
-    "such": [
+    "which": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          22
+        ]
       }
     ],
-    "observation": [
+    "schedules": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          23
+        ]
       }
     ],
-    "first": [
+    "coroutines": [
       {
         "doc_id": 0,
-        "frequency": 2
+        "frequency": 1,
+        "positions": [
+          24
+        ]
       }
     ],
-    "stars": [
+    "handles": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          26
+        ]
       }
     ],
-    "formation": [
+    "non-blocking": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          27
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
       }
     ],
-    "galaxies": [
+    "i": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          28
+        ]
       }
     ],
-    "detailed": [
+    "o": [
       {
         "doc_id": 0,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          29
+        ]
       }
     ],
-    "atmospheric": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "characterization": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "potentially": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "habitable": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "exoplanets": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "це": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "просто": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "тестовий": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "текст": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "для": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "перевірки": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "пошуку": [
-      {
-        "doc_id": 0,
-        "frequency": 1
-      }
-    ],
-    "ocean": [
+    "understanding": [
       {
         "doc_id": 1,
-        "frequency": 2
+        "frequency": 1,
+        "positions": [
+          0
+        ]
       }
     ],
-    "continuous": [
+    "in": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          4
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          16
+        ]
       }
     ],
-    "body": [
+    "requires": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          6
+        ]
       }
     ],
-    "salt": [
+    "knowing": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          7
+        ]
       }
     ],
-    "water": [
+    "how": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          8
+        ]
       }
     ],
-    "that": [
+    "tasks": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 2,
+        "positions": [
+          9,
+          30
+        ]
+      },
+      {
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          27
+        ]
       }
     ],
-    "covers": [
+    "futures": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          10
+        ]
       }
     ],
-    "more": [
+    "callbacks": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          28
+        ]
       }
     ],
-    "than": [
+    "work": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          13
+        ]
       }
     ],
-    "70": [
+    "when": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          14
+        ]
       }
     ],
-    "percent": [
+    "an": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 2,
+        "positions": [
+          15,
+          19
+        ]
+      },
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      },
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
+      },
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
       }
     ],
-    "earth's": [
+    "function": [
       {
         "doc_id": 1,
-        "frequency": 2
+        "frequency": 1,
+        "positions": [
+          17
+        ]
       }
     ],
-    "surface": [
+    "hits": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          18
+        ]
       }
     ],
-    "currents": [
+    "expression": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          21
+        ]
       }
     ],
-    "govern": [
+    "control": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          22
+        ]
+      },
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      },
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
       }
     ],
-    "world's": [
+    "returns": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          23
+        ]
       }
     ],
-    "weather": [
+    "to": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      },
+      {
+        "doc_id": 8,
+        "frequency": 2,
+        "positions": [
+          8,
+          11
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 2,
+        "positions": [
+          8,
+          18
+        ]
+      },
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
       }
     ],
-    "churn": [
+    "so": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          28
+        ]
       }
     ],
-    "kaleidoscope": [
+    "other": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          29
+        ]
       }
     ],
-    "life": [
+    "run": [
       {
         "doc_id": 1,
-        "frequency": 1
+        "frequency": 1,
+        "positions": [
+          31
+        ]
       }
     ],
-    "humans": [
+    "integrating": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          0
+        ]
       }
     ],
-    "depend": [
+    "with": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      },
+      {
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
+      },
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
+      }
+    ],
+    "java": [
+      {
+        "doc_id": 2,
+        "frequency": 2,
+        "positions": [
+          3,
+          20
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 3,
+        "positions": [
+          0,
+          4,
+          23
+        ]
+      }
+    ],
+    "can": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "be": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      }
+    ],
+    "done": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
+      }
+    ],
+    "through": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      },
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      }
+    ],
+    "jpype": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
+      }
+    ],
+    "or": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
+      },
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      }
+    ],
+    "graalvm": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "while": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      }
+    ],
+    "uses": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
+      }
+    ],
+    "concurrency": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          19
+        ]
+      },
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
+      }
+    ],
+    "traditionally": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
+      }
+    ],
+    "relies": [
+      {
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
       }
     ],
     "on": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      },
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
+      },
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
       }
     ],
-    "these": [
+    "jvm": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
       }
     ],
-    "teeming": [
+    "threads": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          25
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
       }
     ],
-    "waters": [
+    "executors": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 2,
+        "frequency": 1,
+        "positions": [
+          27
+        ]
       }
     ],
-    "comfort": [
+    "a": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
       }
     ],
-    "survival": [
+    "readable": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
+      },
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          47
+        ]
       }
     ],
-    "but": [
+    "high-level": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
       }
     ],
-    "global": [
+    "programming": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
       }
     ],
-    "warming": [
+    "language": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
       }
     ],
-    "overfishing": [
+    "dynamic": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
       }
     ],
-    "threaten": [
+    "typing": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
       }
     ],
-    "habitat": [
+    "lists": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      },
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
       }
     ],
-    "marine": [
+    "dictionaries": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
       }
     ],
-    "biologists": [
+    "generators": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
       }
     ],
-    "are": [
+    "developers": [
       {
-        "doc_id": 1,
-        "frequency": 2
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
       }
     ],
-    "working": [
+    "value": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      },
+      {
+        "doc_id": 5,
+        "frequency": 1,
+        "positions": [
+          25
+        ]
       }
     ],
-    "tirelessly": [
+    "clean": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
       }
     ],
-    "understand": [
+    "rapid": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
       }
     ],
-    "deep-sea": [
+    "prototyping": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
       }
     ],
-    "ecosystems": [
+    "across": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
       }
     ],
-    "before": [
+    "automation": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      },
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          53
+        ]
       }
     ],
-    "they": [
+    "scripting": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 3,
+        "frequency": 1,
+        "positions": [
+          26
+        ]
       }
     ],
-    "irreversibly": [
+    "comprehensive": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          0
+        ]
       }
     ],
-    "damaged": [
+    "software": [
       {
-        "doc_id": 1,
-        "frequency": 1
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "engineering": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "guide": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
+      }
+    ],
+    "covering": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "architecture": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      }
+    ],
+    "testing": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
+      }
+    ],
+    "packaging": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      }
+    ],
+    "deployment": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
+      }
+    ],
+    "observability": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
+      }
+    ],
+    "containers": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "continuous": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      }
+    ],
+    "integration": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      }
+    ],
+    "version": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
+      }
+    ],
+    "review": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          16
+        ]
+      }
+    ],
+    "profiling": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      }
+    ],
+    "caching": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
+      }
+    ],
+    "logging": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          19
+        ]
+      },
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          19
+        ]
+      }
+    ],
+    "security": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
+      }
+    ],
+    "configuration": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
+      }
+    ],
+    "management": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
+      }
+    ],
+    "dependency": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
+      }
+    ],
+    "injection": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      }
+    ],
+    "api": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          25
+        ]
+      }
+    ],
+    "design": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          26
+        ]
+      }
+    ],
+    "documentation": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          27
+        ]
+      }
+    ],
+    "modularity": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          28
+        ]
+      }
+    ],
+    "refactoring": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          29
+        ]
+      }
+    ],
+    "microservices": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          30
+        ]
+      }
+    ],
+    "message": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          31
+        ]
+      }
+    ],
+    "queues": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          32
+        ]
+      }
+    ],
+    "load": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          33
+        ]
+      }
+    ],
+    "balancing": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          34
+        ]
+      }
+    ],
+    "fault": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          35
+        ]
+      }
+    ],
+    "tolerance": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          36
+        ]
+      }
+    ],
+    "distributed": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          37
+        ]
+      }
+    ],
+    "tracing": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          38
+        ]
+      }
+    ],
+    "one": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          40
+        ]
+      }
+    ],
+    "brief": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          41
+        ]
+      }
+    ],
+    "note": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          42
+        ]
+      }
+    ],
+    "that": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          43
+        ]
+      }
+    ],
+    "supports": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          45
+        ]
+      }
+    ],
+    "clear": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          46
+        ]
+      }
+    ],
+    "modules": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          48
+        ]
+      }
+    ],
+    "backend": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          50
+        ]
+      },
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "services": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          51
+        ]
+      }
+    ],
+    "pipelines": [
+      {
+        "doc_id": 4,
+        "frequency": 1,
+        "positions": [
+          54
+        ]
+      }
+    ],
+    "keywords": [
+      {
+        "doc_id": 5,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
+      }
+    ],
+    "repeated": [
+      {
+        "doc_id": 5,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
+      }
+    ],
+    "without": [
+      {
+        "doc_id": 5,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
+      }
+    ],
+    "real": [
+      {
+        "doc_id": 5,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
+      }
+    ],
+    "tutorial": [
+      {
+        "doc_id": 5,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      }
+    ],
+    "modern": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          0
+        ]
+      }
+    ],
+    "javascript": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "rust": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
+      }
+    ],
+    "both": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "implement": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      }
+    ],
+    "abstractions": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
+      }
+    ],
+    "over": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "executor": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      }
+    ],
+    "node": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      }
+    ],
+    "js": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
+      }
+    ],
+    "single-threaded": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
+      }
+    ],
+    "processes": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
+      }
+    ],
+    "timers": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      }
+    ],
+    "promises": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          25
+        ]
+      }
+    ],
+    "network": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          27
+        ]
+      },
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "efficiently": [
+      {
+        "doc_id": 6,
+        "frequency": 1,
+        "positions": [
+          29
+        ]
+      }
+    ],
+    "runs": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "virtual": [
+      {
+        "doc_id": 7,
+        "frequency": 2,
+        "positions": [
+          5,
+          20
+        ]
+      }
+    ],
+    "machine": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
+      }
+    ],
+    "powers": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
+      }
+    ],
+    "enterprise": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
+      }
+    ],
+    "systems": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      }
+    ],
+    "spring": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
+      }
+    ],
+    "boot": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      }
+    ],
+    "garbage": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      }
+    ],
+    "collection": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          16
+        ]
+      }
+    ],
+    "jit": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      }
+    ],
+    "compilation": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
+      }
+    ],
+    "make": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
+      }
+    ],
+    "strong": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      }
+    ],
+    "high-throughput": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          26
+        ]
+      }
+    ],
+    "workloads": [
+      {
+        "doc_id": 7,
+        "frequency": 1,
+        "positions": [
+          27
+        ]
+      }
+    ],
+    "information": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          0
+        ]
+      }
+    ],
+    "retrieval": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "engines": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "rely": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
+      }
+    ],
+    "inverted": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          6
+        ]
+      }
+    ],
+    "index": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      }
+    ],
+    "map": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
+      }
+    ],
+    "terms": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "postings": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      }
+    ],
+    "ranking": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      }
+    ],
+    "algorithms": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      }
+    ],
+    "such": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          16
+        ]
+      }
+    ],
+    "as": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      }
+    ],
+    "tf-idf": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
+      }
+    ],
+    "bm25": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
+      }
+    ],
+    "score": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
+      }
+    ],
+    "documents": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
+      }
+    ],
+    "term": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      }
+    ],
+    "frequency": [
+      {
+        "doc_id": 8,
+        "frequency": 2,
+        "positions": [
+          25,
+          29
+        ]
+      }
+    ],
+    "inverse": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          27
+        ]
+      }
+    ],
+    "document": [
+      {
+        "doc_id": 8,
+        "frequency": 1,
+        "positions": [
+          28
+        ]
+      }
+    ],
+    "linux": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          0
+        ]
+      }
+    ],
+    "servers": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "use": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
+      }
+    ],
+    "sockets": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      }
+    ],
+    "epoll": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      }
+    ],
+    "multiplex": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          9
+        ]
+      }
+    ],
+    "thousands": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      }
+    ],
+    "os-level": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      }
+    ],
+    "reacts": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      }
+    ],
+    "socket": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          19
+        ]
+      }
+    ],
+    "readiness": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          20
+        ]
+      }
+    ],
+    "events": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          21
+        ]
+      }
+    ],
+    "spawning": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
+      }
+    ],
+    "thread": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          25
+        ]
+      }
+    ],
+    "per": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          26
+        ]
+      }
+    ],
+    "client": [
+      {
+        "doc_id": 9,
+        "frequency": 1,
+        "positions": [
+          27
+        ]
+      }
+    ],
+    "decorators": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "wrap": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "functions": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
+      }
+    ],
+    "closures": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      }
+    ],
+    "functools": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      }
+    ],
+    "wraps": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
+      }
+    ],
+    "preserve": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "metadata": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      }
+    ],
+    "combined": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      }
+    ],
+    "dunder": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      }
+    ],
+    "methods": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      }
+    ],
+    "context": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          17
+        ]
+      }
+    ],
+    "managers": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
+      }
+    ],
+    "expressive": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          22
+        ]
+      }
+    ],
+    "object": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          23
+        ]
+      }
+    ],
+    "model": [
+      {
+        "doc_id": 10,
+        "frequency": 1,
+        "positions": [
+          24
+        ]
+      }
+    ],
+    "relational": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          0
+        ]
+      }
+    ],
+    "databases": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          1
+        ]
+      }
+    ],
+    "store": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "records": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          3
+        ]
+      }
+    ],
+    "disk": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          5
+        ]
+      }
+    ],
+    "accelerate": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          7
+        ]
+      }
+    ],
+    "lookups": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          8
+        ]
+      }
+    ],
+    "b-tree": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          10
+        ]
+      }
+    ],
+    "indexes": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          11
+        ]
+      }
+    ],
+    "sql": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          12
+        ]
+      }
+    ],
+    "transactions": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          13
+        ]
+      }
+    ],
+    "guarantee": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          14
+        ]
+      }
+    ],
+    "acid": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          15
+        ]
+      }
+    ],
+    "properties": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          16
+        ]
+      }
+    ],
+    "write-ahead": [
+      {
+        "doc_id": 11,
+        "frequency": 1,
+        "positions": [
+          18
+        ]
       }
     ]
   }

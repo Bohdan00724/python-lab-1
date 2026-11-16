@@ -1,0 +1,1 @@
+Modern JavaScript and Rust both implement async and await abstractions over an event loop or executor. In Node.js the single-threaded event loop processes timers, promises, and network callbacks efficiently.
