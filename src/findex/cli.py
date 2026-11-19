@@ -1,7 +1,6 @@
 import json
 import logging
 import sys
-from collections.abc import Iterator
 from pathlib import Path
 from typing import Annotated
 
@@ -10,8 +9,7 @@ from rich.console import Console
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
-from findex.core import tokenize
-from findex.index import Index, open_index
+from findex.index import ExecutorType, build_index, open_index
 from findex.parser import QuerySyntaxError
 from findex.ranking import ScorerName, get_scorer
 from findex.search import EngineName, search
@@ -70,6 +68,18 @@ def index_cmd(
     out: Annotated[Path, typer.Option("--out", "-o", help="Шлях до вихідного JSON-індексу")] = Path(
         "index.json"
     ),
+    workers: Annotated[
+        int,
+        typer.Option("--workers", "-w", min=1, help="Кількість паралельних воркерів"),
+    ] = 1,
+    executor: Annotated[
+        ExecutorType,
+        typer.Option(
+            "--executor",
+            "-e",
+            help="Виконавець паралельної індексації: serial, threads або processes",
+        ),
+    ] = "processes",
     no_positions: Annotated[
         bool,
         typer.Option("--no-positions", help="Не зберігати позиції слів в індексі"),
@@ -87,8 +97,6 @@ def index_cmd(
         err_console.print(f"[red]Помилка:[/red] у каталозі {corpus_dir} немає .txt файлів.")
         raise typer.Exit(code=1)
 
-    idx = Index(store_positions=not no_positions)
-
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
@@ -96,16 +104,20 @@ def index_cmd(
         TextColumn("{task.completed}/{task.total}"),
         console=err_console,
     ) as progress:
-        task_id = progress.add_task("Індексація документів...", total=len(files))
+        task_id = progress.add_task(
+            f"Індексація ({executor}, workers={workers})...", total=len(files)
+        )
 
-        def pipeline() -> Iterator[tuple[int, list[str], str]]:
-            for doc_id, file_path in enumerate(files):
-                text = file_path.read_text(encoding="utf-8")
-                tokens = list(tokenize(text))
-                progress.advance(task_id)
-                yield doc_id, tokens, str(file_path)
+        def _advance(count: int) -> None:
+            progress.advance(task_id, advance=count)
 
-        idx.build_from_pipeline(pipeline())
+        idx = build_index(
+            files,
+            workers=workers,
+            executor=executor,
+            store_positions=not no_positions,
+            on_chunk_done=_advance,
+        )
 
     idx.save_json(out)
     err_console.print(f"[green]Готово:[/green] {idx!r} збережено у {out}")
