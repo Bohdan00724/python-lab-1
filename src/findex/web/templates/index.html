@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ title }}</title>
+  <script src="https://unpkg.com/htmx.org@2.0.4" defer></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --mark-bg: #fef08a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .brand {
+      font-size: 1.65rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .badge {
+      font-size: 0.82rem;
+      background: #e0e7ff;
+      color: #1e40af;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .search-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+      margin-bottom: 20px;
+    }
+    .search-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    input[type="text"] {
+      flex: 1 1 360px;
+      padding: 11px 14px;
+      font-size: 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+    }
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    select, button {
+      padding: 10px 14px;
+      font-size: 0.95rem;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      background: #fff;
+      cursor: pointer;
+    }
+    button.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+    button.primary:hover { background: var(--primary-hover); }
+    .hint {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .meta-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      transition: border-color 0.15s;
+    }
+    .result-card:hover { border-color: #93c5fd; }
+    .result-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+    .doc-link {
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+      word-break: break-all;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      text-align: left;
+      font-size: 1rem;
+    }
+    .doc-link:hover { text-decoration: underline; }
+    .score-pill {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+    .snippet {
+      margin: 0;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+    mark {
+      background: var(--mark-bg);
+      color: #0f172a;
+      padding: 1px 3px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+    .pagination {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 22px;
+    }
+    .page-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .page-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .error-banner {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+    }
+    dialog {
+      max-width: 780px;
+      width: 92%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+    }
+    dialog::backdrop { background: rgba(15, 23, 42, 0.45); }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+    }
+    .modal-body {
+      padding: 18px;
+      max-height: 70vh;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.88rem;
+      background: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="/" class="brand">findex</a>
+      <span class="badge">Документів в індексі: {{ num_docs }} | Термінів: {{ num_terms }}</span>
+    </header>
+
+    <form class="search-box" method="get" action="/" hx-get="/" hx-target="#results-region" hx-select="#results-region" hx-push-url="true">
+      <div class="search-row">
+        <input
+          type="text"
+          name="q"
+          value="{{ q }}"
+          placeholder="Введіть запит: python AND (async OR await) NOT java"
+          aria-label="Пошуковий запит"
+        />
+        <select name="scorer" aria-label="Алгоритм ранжування">
+          <option value="bm25" {{ "selected" if scorer == "bm25" else "" }}>BM25</option>
+          <option value="tfidf" {{ "selected" if scorer == "tfidf" else "" }}>TF-IDF</option>
+        </select>
+        <select name="k" aria-label="Результатів на сторінку">
+          <option value="5" {{ "selected" if k == 5 else "" }}>5 / стор.</option>
+          <option value="10" {{ "selected" if k == 10 else "" }}>10 / стор.</option>
+          <option value="20" {{ "selected" if k == 20 else "" }}>20 / стор.</option>
+        </select>
+        <button type="submit" class="primary">Знайти</button>
+      </div>
+      <div class="hint">
+        Підтримуються оператори <code>AND</code>, <code>OR</code>, <code>NOT</code>, дужки <code>(...)</code> та фрази <code>"event loop"</code>.
+        API: <a href="/docs" target="_blank">/docs</a> · <a href="/stats" target="_blank">/stats</a> · <a href="/health" target="_blank">/health</a>
+      </div>
+    </form>
+
+    <div id="results-region">
+      {% if error_msg %}
+        <div class="error-banner">{{ error_msg }}</div>
+      {% endif %}
+
+      {% if q and not error_msg %}
+        <div class="meta-bar">
+          <span>Знайдено документів: <strong>{{ total }}</strong> (сторінка {{ page }} із {{ total_pages }})</span>
+          <span>Час пошуку: <strong>{{ "%.2f"|format(elapsed_ms) }} мс</strong> ({{ scorer.upper() }})</span>
+        </div>
+
+        {% if results %}
+          {% for item in results %}
+            <article class="result-card">
+              <div class="result-head">
+                <button type="button" class="doc-link" data-doc-id="{{ item.doc_id }}" onclick="openDoc(this.dataset.docId)">
+                  #{{ item.doc_id }} — {{ item.path or ("Документ #" ~ item.doc_id) }}
+                </button>
+                <span class="score-pill">score: {{ "%.4f"|format(item.score) }}</span>
+              </div>
+              <p class="snippet">{{ item.snippet_html | safe }}</p>
+            </article>
+          {% endfor %}
+
+          {% if total_pages > 1 %}
+            <nav class="pagination" aria-label="Сторінки результатів">
+              {% if has_prev %}
+                <a class="page-btn" href="/?q={{ q | urlencode }}&scorer={{ scorer }}&k={{ k }}&page={{ page - 1 }}">← Попередня</a>
+              {% endif %}
+              <span>Сторінка {{ page }} з {{ total_pages }}</span>
+              {% if has_next %}
+                <a class="page-btn" href="/?q={{ q | urlencode }}&scorer={{ scorer }}&k={{ k }}&page={{ page + 1 }}">Наступна →</a>
+              {% endif %}
+            </nav>
+          {% endif %}
+        {% else %}
+          <div class="result-card">Нічого не знайдено за запитом <strong>{{ q }}</strong>.</div>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+
+  <dialog id="doc-modal">
+    <div class="modal-head">
+      <strong id="modal-title">Документ</strong>
+      <button type="button" onclick="document.getElementById('doc-modal').close()">Закрити ✕</button>
+    </div>
+    <div class="modal-body" id="modal-content">Завантаження...</div>
+  </dialog>
+
+  <script>
+    async function openDoc(docId) {
+      const modal = document.getElementById("doc-modal");
+      const titleEl = document.getElementById("modal-title");
+      const contentEl = document.getElementById("modal-content");
+      titleEl.textContent = "Документ #" + docId;
+      contentEl.textContent = "Завантаження вмісту...";
+      modal.showModal();
+      try {
+        const resp = await fetch("/docs/" + docId);
+        if (!resp.ok) {
+          contentEl.textContent = "Помилка завантаження документа (HTTP " + resp.status + ")";
+          return;
+        }
+        const data = await resp.json();
+        titleEl.textContent = "#" + data.doc_id + " — " + (data.path || "Документ");
+        contentEl.textContent = data.content || "(Порожній документ)";
+      } catch (err) {
+        contentEl.textContent = "Мережева помилка: " + err;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,12 +1,14 @@
 import asyncio
 import json
 import logging
+import os
 import sys
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Annotated
 
 import typer
+import uvicorn
 from rich.console import Console
 from rich.live import Live
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
@@ -22,7 +24,7 @@ from findex.stats import run_generator_test, run_list_test
 
 app = typer.Typer(
     name="findex",
-    help="Пошуковий рушій findex з інвертованим індексом, TF-IDF/BM25 та краулером.",
+    help="Пошуковий рушій findex з інвертованим індексом, TF-IDF/BM25, краулером та веб-UI.",
     no_args_is_help=True,
 )
 
@@ -413,6 +415,37 @@ def stats_cmd(
             table.add_row("Список (час / пік RAM)", f"{list_time:.4f} с / {list_mem:.4f} MB")
 
         out_console.print(table)
+
+
+@app.command("serve")
+def serve_cmd(
+    host: Annotated[str, typer.Option("--host", help="Хост для прослуховування")] = "0.0.0.0",
+    port: Annotated[int, typer.Option("--port", "-p", min=1, max=65535, help="Порт")] = 8000,
+    workers: Annotated[
+        int, typer.Option("--workers", "-w", min=1, help="Кількість воркерів uvicorn")
+    ] = 1,
+    index_file: Annotated[
+        Path | None,
+        typer.Option("--index", "-i", help="Опційний шлях до індексу (встановлює INDEX_PATH)"),
+    ] = None,
+    verbose: VerboseOption = 0,
+) -> None:
+    """Запускає HTTP-сервер FastAPI через uvicorn."""
+    _configure_logging(verbose)
+    if index_file is not None:
+        os.environ["INDEX_PATH"] = str(index_file)
+    effective_port = int(os.getenv("PORT", str(port)))
+    err_console.print(
+        f"[green]Запуск findex web:[/green] http://{host}:{effective_port} "
+        f"(workers={workers}, INDEX_PATH={os.getenv('INDEX_PATH', 'index.json')})"
+    )
+    uvicorn.run(
+        "findex.web.app:create_app",
+        factory=True,
+        host=host,
+        port=effective_port,
+        workers=workers,
+    )
 
 
 if __name__ == "__main__":
