@@ -28,7 +28,7 @@ def _assert_indices_equal(actual: Index, expected: Index) -> None:
 def test_merge_single_build_partial_matches_lab4(
     built_index: tuple[Index, Path], mini_corpus_dir: Path
 ) -> None:
-    """Послідовний варіант merge([build_partial(усі шляхи)]) дає той самий індекс, що й лаба 4."""
+    """Послідовний варіант merge([build_partial(усі шляхи)]) дає той самий індекс."""
     expected_idx, _ = built_index
     all_paths = sorted(mini_corpus_dir.rglob("*.txt"))
 
