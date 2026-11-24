@@ -1,97 +1,328 @@
-import heapq
 import math
-from collections import defaultdict
-from collections.abc import Iterable
-from dataclasses import dataclass, field
-from typing import Literal, Protocol, runtime_checkable
+from abc import ABC, abstractmethod
+from collections.abc import Iterable, Sequence
+from dataclasses import dataclass
+from typing import Literal
+
+import numpy as np
+from numpy.typing import NDArray
 
 from findex.index import Index, Posting
 
-ScorerName = Literal["bm25", "tfidf"]
+ScorerName = Literal["tfidf", "bm25"]
 
 
-@dataclass(frozen=True, order=True, slots=True)
+@dataclass(frozen=True, slots=True)
 class SearchResult:
-    """Результат пошуку, впорядкований за спаданням score (через heapq.nlargest)."""
-
-    score: float
     doc_id: int
-    path: str = field(default="", compare=False)
-    snippet: str = field(default="", compare=False)
+    score: float
+    path: str = ""
+    snippet: str = ""
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, SearchResult):
+            return NotImplemented
+        return self.score < other.score
+
+    def __gt__(self, other: object) -> bool:
+        if not isinstance(other, SearchResult):
+            return NotImplemented
+        return self.score > other.score
 
 
-@runtime_checkable
-class Scorer(Protocol):
-    """Протокол для взаємозамінних алгоритмів ранжування (duck typing)."""
+@dataclass(slots=True)
+class NumPyCorpusArrays:
+    """Компактне представлення корпусу та постінгів у масивах NumPy int32."""
 
-    def score(self, term: str, posting: Posting, index: Index) -> float: ...
+    doc_ids_sorted: NDArray[np.int32]
+    doc_lengths: NDArray[np.int32]
+    doc_id_to_pos: dict[int, int]
+    term_doc_ids: dict[str, NDArray[np.int32]]
+    term_freqs: dict[str, NDArray[np.int32]]
+    avg_doc_length: float
+    num_docs: int
+
+    @classmethod
+    def from_index(cls, index: Index) -> "NumPyCorpusArrays":
+        all_ids = sorted(index.all_doc_ids())
+        doc_ids_arr = np.asarray(all_ids, dtype=np.int32)
+        doc_lengths_arr = np.asarray(
+            [index.doc_length(doc_id) for doc_id in all_ids], dtype=np.int32
+        )
+        doc_id_to_pos = {int(doc_id): pos for pos, doc_id in enumerate(all_ids)}
+
+        term_doc_ids: dict[str, NDArray[np.int32]] = {}
+        term_freqs: dict[str, NDArray[np.int32]] = {}
+        for term in index:
+            plist: list[Posting] = index[term]
+            if plist:
+                term_doc_ids[term] = np.asarray([p.doc_id for p in plist], dtype=np.int32)
+                term_freqs[term] = np.asarray([p.frequency for p in plist], dtype=np.int32)
+
+        return cls(
+            doc_ids_sorted=doc_ids_arr,
+            doc_lengths=doc_lengths_arr,
+            doc_id_to_pos=doc_id_to_pos,
+            term_doc_ids=term_doc_ids,
+            term_freqs=term_freqs,
+            avg_doc_length=float(index.avg_doc_length),
+            num_docs=int(index.num_docs),
+        )
 
 
-@dataclass(frozen=True, slots=True)
-class TfIdf:
-    """Класичне ранжування TF-IDF з нормалізацією за довжиною документа."""
+def top_k_indices(scores: NDArray[np.float64], k: int) -> NDArray[np.intp]:
+    """Повертає індекси top-k елементів (за спаданням score) через np.argpartition."""
+    n = int(scores.shape[0])
+    if k <= 0 or n == 0:
+        return np.empty(0, dtype=np.intp)
+    effective_k = min(k, n)
+    if effective_k < n:
+        part_idx = np.argpartition(-scores, effective_k - 1)[:effective_k]
+    else:
+        part_idx = np.arange(n, dtype=np.intp)
+    order = np.argsort(-scores[part_idx], kind="mergesort")
+    return part_idx[order]
 
-    def score(self, term: str, posting: Posting, index: Index) -> float:
-        n_docs = index.num_docs
-        df = index.df(term)
-        if n_docs == 0 or df == 0 or posting.frequency == 0:
+
+def _term_frequency_in_doc(index: Index, term: str, doc_id: int) -> int:
+    if term not in index:
+        return 0
+    for posting in index[term]:
+        if posting.doc_id == doc_id:
+            return posting.frequency
+    return 0
+
+
+def _resolve_score_args(
+    first: Index | int,
+    second: int | Sequence[str],
+    third: Sequence[str] | Index | None,
+) -> tuple[Index, int, Sequence[str]]:
+    """Підтримує виклики score(index, doc_id, terms) та score(doc_id, terms, index)."""
+    if isinstance(first, Index) and isinstance(second, int) and third is not None:
+        return first, second, list(third)  # type: ignore[arg-type]
+    if isinstance(first, int) and isinstance(third, Index):
+        terms_seq = list(second) if isinstance(second, (list, tuple, set)) else [str(second)]
+        return third, first, terms_seq
+    raise TypeError("Unsupported arguments for score()")
+
+
+class Scorer(ABC):
+    @abstractmethod
+    def score(
+        self,
+        first: Index | int,
+        second: int | Sequence[str],
+        third: Sequence[str] | Index | None = None,
+    ) -> float:
+        """Обчислює оцінку релевантності документа за термами запиту."""
+
+    def score_documents(
+        self,
+        index: Index,
+        query_terms: Sequence[str],
+        candidate_doc_ids: Iterable[int],
+    ) -> dict[int, float]:
+        """Повертає словник {doc_id: score} для кандидатів."""
+        candidates = list(candidate_doc_ids)
+        if not candidates or not query_terms or index.num_docs == 0:
+            return {}
+        arrays = NumPyCorpusArrays.from_index(index)
+        doc_arr, score_arr = self.score_with_numpy(arrays, query_terms, candidates)
+        return {
+            int(d_id): float(sc)
+            for d_id, sc in zip(doc_arr.tolist(), score_arr.tolist(), strict=False)
+            if float(sc) > 0.0
+        }
+
+    def score_with_numpy(
+        self,
+        arrays: NumPyCorpusArrays,
+        query_terms: Sequence[str],
+        candidate_doc_ids: Sequence[int],
+    ) -> tuple[NDArray[np.int32], NDArray[np.float64]]:
+        """Векторизований підрахунок балів над масивами NumPy для кандидатів."""
+        raise NotImplementedError
+
+
+class TfIdf(Scorer):
+    """TF-IDF скорер з векторизованим обчисленням над масивами NumPy."""
+
+    def score(
+        self,
+        first: Index | int,
+        second: int | Sequence[str],
+        third: Sequence[str] | Index | None = None,
+    ) -> float:
+        index, doc_id, query_terms = _resolve_score_args(first, second, third)
+        if index.num_docs == 0 or not query_terms:
             return 0.0
+        doc_len = max(index.doc_length(doc_id), 1)
+        total = 0.0
+        for term in dict.fromkeys(query_terms):
+            df_val = index.df(term)
+            if df_val == 0:
+                continue
+            tf_raw = _term_frequency_in_doc(index, term, doc_id)
+            if tf_raw > 0:
+                idf = math.log((index.num_docs + 1.0) / (df_val + 0.5)) + 1.0
+                total += (float(tf_raw) / float(doc_len)) * idf
+        return total
 
-        doc_len = max(index.doc_length(posting.doc_id), 1)
-        tf = posting.frequency / doc_len
-        idf = math.log((n_docs + 1) / (df + 1)) + 1.0
-        return tf * idf
+    def score_with_numpy(
+        self,
+        arrays: NumPyCorpusArrays,
+        query_terms: Sequence[str],
+        candidate_doc_ids: Sequence[int],
+    ) -> tuple[NDArray[np.int32], NDArray[np.float64]]:
+        cand_ids = np.asarray(list(candidate_doc_ids), dtype=np.int32)
+        if cand_ids.size == 0 or arrays.num_docs == 0:
+            return np.empty(0, dtype=np.int32), np.empty(0, dtype=np.float64)
+
+        scores = np.zeros(cand_ids.shape[0], dtype=np.float64)
+        cand_pos_map = {int(doc_id): idx for idx, doc_id in enumerate(cand_ids.tolist())}
+
+        for term in dict.fromkeys(query_terms):
+            t_docs = arrays.term_doc_ids.get(term)
+            t_freqs = arrays.term_freqs.get(term)
+            if t_docs is None or t_freqs is None or t_docs.size == 0:
+                continue
+            df_val = int(t_docs.size)
+            idf = math.log((arrays.num_docs + 1.0) / (df_val + 0.5)) + 1.0
+            for d_id, freq in zip(t_docs.tolist(), t_freqs.tolist(), strict=False):
+                pos_in_cand = cand_pos_map.get(int(d_id))
+                if pos_in_cand is not None:
+                    doc_pos = arrays.doc_id_to_pos.get(int(d_id))
+                    doc_len = (
+                        max(int(arrays.doc_lengths[doc_pos]), 1)
+                        if doc_pos is not None
+                        else 1
+                    )
+                    tf = float(freq) / float(doc_len)
+                    scores[pos_in_cand] += tf * idf
+
+        return cand_ids, scores
 
 
-@dataclass(frozen=True, slots=True)
-class BM25:
-    """Ранжування Okapi BM25 з насиченням частоти та нормалізацією довжини."""
+TFIDF = TfIdf
 
-    k1: float = 1.5
-    b: float = 0.75
 
-    def score(self, term: str, posting: Posting, index: Index) -> float:
-        n_docs = index.num_docs
-        df = index.df(term)
-        if n_docs == 0 or df == 0 or posting.frequency == 0:
+class BM25(Scorer):
+    """Okapi BM25 скорер з векторизованим обчисленням над масивами NumPy."""
+
+    def __init__(self, k1: float = 1.5, b: float = 0.75) -> None:
+        self.k1 = k1
+        self.b = b
+
+    def score(
+        self,
+        first: Index | int,
+        second: int | Sequence[str],
+        third: Sequence[str] | Index | None = None,
+    ) -> float:
+        index, doc_id, query_terms = _resolve_score_args(first, second, third)
+        if index.num_docs == 0 or not query_terms:
             return 0.0
+        avgdl = index.avg_doc_length if index.avg_doc_length > 0.0 else 1.0
+        dl = float(index.doc_length(doc_id))
+        denom_norm = self.k1 * (1.0 - self.b + self.b * (dl / avgdl))
+        total = 0.0
+        for term in dict.fromkeys(query_terms):
+            df_val = index.df(term)
+            if df_val == 0:
+                continue
+            tf = float(_term_frequency_in_doc(index, term, doc_id))
+            if tf > 0.0:
+                idf = math.log((index.num_docs - df_val + 0.5) / (df_val + 0.5) + 1.0)
+                total += idf * (tf * (self.k1 + 1.0)) / (tf + denom_norm)
+        return total
 
-        doc_len = index.doc_length(posting.doc_id)
-        avg_dl = index.avg_doc_length or 1.0
+    def score_with_numpy(
+        self,
+        arrays: NumPyCorpusArrays,
+        query_terms: Sequence[str],
+        candidate_doc_ids: Sequence[int],
+    ) -> tuple[NDArray[np.int32], NDArray[np.float64]]:
+        cand_ids = np.asarray(list(candidate_doc_ids), dtype=np.int32)
+        if cand_ids.size == 0 or arrays.num_docs == 0:
+            return np.empty(0, dtype=np.int32), np.empty(0, dtype=np.float64)
 
-        idf = math.log((n_docs - df + 0.5) / (df + 0.5) + 1.0)
-        tf = posting.frequency
-        denom = tf + self.k1 * (1.0 - self.b + self.b * (doc_len / avg_dl))
-        return idf * ((tf * (self.k1 + 1.0)) / denom)
+        avgdl = arrays.avg_doc_length if arrays.avg_doc_length > 0.0 else 1.0
+        doc_positions = np.asarray(
+            [arrays.doc_id_to_pos.get(int(d_id), 0) for d_id in cand_ids.tolist()],
+            dtype=np.intp,
+        )
+        dl = arrays.doc_lengths[doc_positions].astype(np.float64)
+        denom_norm = self.k1 * (1.0 - self.b + self.b * (dl / avgdl))
+
+        scores = np.zeros(cand_ids.shape[0], dtype=np.float64)
+        cand_pos_map = {int(doc_id): idx for idx, doc_id in enumerate(cand_ids.tolist())}
+
+        for term in dict.fromkeys(query_terms):
+            t_docs = arrays.term_doc_ids.get(term)
+            t_freqs = arrays.term_freqs.get(term)
+            if t_docs is None or t_freqs is None or t_docs.size == 0:
+                continue
+            df_val = int(t_docs.size)
+            idf = math.log(
+                (arrays.num_docs - df_val + 0.5) / (df_val + 0.5) + 1.0
+            )
+            tf_vec = np.zeros(cand_ids.shape[0], dtype=np.float64)
+            for d_id, freq in zip(t_docs.tolist(), t_freqs.tolist(), strict=False):
+                pos_in_cand = cand_pos_map.get(int(d_id))
+                if pos_in_cand is not None:
+                    tf_vec[pos_in_cand] = float(freq)
+
+            term_score = idf * (tf_vec * (self.k1 + 1.0)) / (tf_vec + denom_norm)
+            scores += term_score
+
+        return cand_ids, scores
 
 
 def get_scorer(name: ScorerName) -> Scorer:
-    """Фабрика скорерів за рядковим Literal-іменем."""
+    if name == "tfidf":
+        return TfIdf()
     if name == "bm25":
         return BM25()
-    return TfIdf()
+    raise ValueError(f"Unknown scorer: {name!r}")
 
 
 def rank_documents(
     index: Index,
-    query_terms: Iterable[str],
+    query_terms: Sequence[str],
     scorer: Scorer,
     allowed_docs: set[int] | None = None,
     top_k: int = 5,
 ) -> list[SearchResult]:
-    """Накопичує бали за термінами запиту та повертає топ-k через heapq.nlargest."""
-    scores: defaultdict[int, float] = defaultdict(float)
+    """Оцінює документи через NumPy-масиви та відбирає top-k через np.argpartition."""
+    if top_k <= 0 or index.num_docs == 0:
+        return []
 
-    for term in query_terms:
-        if term not in index:
-            continue
-        for posting in index[term]:
-            if allowed_docs is not None and posting.doc_id not in allowed_docs:
-                continue
-            scores[posting.doc_id] += scorer.score(term, posting, index)
+    candidates_list = (
+        sorted(allowed_docs) if allowed_docs is not None else sorted(index.all_doc_ids())
+    )
+    if not candidates_list:
+        return []
 
-    candidates = [
-        SearchResult(score=total_score, doc_id=doc_id, path=index.doc_path(doc_id))
-        for doc_id, total_score in scores.items()
+    arrays = NumPyCorpusArrays.from_index(index)
+    doc_arr, score_arr = scorer.score_with_numpy(arrays, query_terms, candidates_list)
+
+    positive_mask = score_arr > 0.0
+    pos_indices = np.flatnonzero(positive_mask)
+    if pos_indices.size == 0:
+        return []
+
+    filtered_docs = doc_arr[pos_indices]
+    filtered_scores = score_arr[pos_indices]
+
+    selected_local = top_k_indices(filtered_scores, top_k)
+
+    pairs: list[tuple[int, float]] = [
+        (int(filtered_docs[i]), float(filtered_scores[i])) for i in selected_local.tolist()
     ]
-    return heapq.nlargest(top_k, candidates)
+    pairs.sort(key=lambda item: (-item[1], item[0]))
+
+    return [
+        SearchResult(doc_id=doc_id, score=sc, path=index.doc_path(doc_id))
+        for doc_id, sc in pairs[:top_k]
+    ]
